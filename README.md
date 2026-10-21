@@ -1,4 +1,8 @@
-<h1 align="center">📔 TADA ｜ AI絵日記サービス</h1>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/idlms9/tada-frontend/main/tada-logo.png" alt="TADA" width="260" />
+</p>
+
+<h3 align="center">AI絵日記サービス</h3>
 
 <p align="center"><b>日記を書くと、AIが一日を1枚のステッカーにして残してくれる</b></p>
 
