@@ -191,7 +191,7 @@ sequenceDiagram
 | GET | /api/diaries/trash | ゴミ箱の一覧 |
 | GET | /api/diaries/can-create | 作成可否の確認 |
 | POST | /api/diaries/generate-sticker | ステッカー生成 |
-| DELETE | /api/diaries/{id}/permanent | 完全削除(バッチが利用) |
+| DELETE | /api/diaries/{id}/permanent | 完全削除(画面からは使わない) |
 | GET | /api/calendar | 月別のステッカー取得 |
 
 ## 課題と対応
@@ -235,27 +235,6 @@ sequenceDiagram
   <tr>
     <td><b>🟢 結果</b></td>
     <td>同時に操作しても、エラーにならず<br>日記は1件のまま</td>
-  </tr>
-</table>
-
-### ③ ログイン直後にカレンダーが更新されない(フロントエンド)
-
-<table>
-  <tr>
-    <td width="90"><b>🔴 問題</b></td>
-    <td>ログイン直後も、再読み込みするまで<br>カレンダーが変わらない</td>
-  </tr>
-  <tr>
-    <td><b>🟡 原因</b></td>
-    <td>トークンの変化が画面に伝わらず、<br>データが再取得されなかった</td>
-  </tr>
-  <tr>
-    <td><b>🔵 対応</b></td>
-    <td>トークンを購読可能にし(<code>useAccessToken</code>)、<br>ログイン時にカレンダーを再取得</td>
-  </tr>
-  <tr>
-    <td><b>🟢 結果</b></td>
-    <td>再読み込みなしで、<br>カレンダーがすぐ切り替わる</td>
   </tr>
 </table>
 
