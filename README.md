@@ -25,26 +25,22 @@
 
 <table>
   <tr>
-    <th width="50%">🖥️ フロントエンド</th>
-    <th width="50%">⚙️ バックエンド</th>
+    <td width="170"><b>🖥️ フロントエンド</b></td>
+    <td>
+      ・月間カレンダー画面(CSS Grid自作・年月ピッカー)<br>
+      ・日記の作成・詳細モーダル<br>
+      ・ゴミ箱パネルとドラッグ&amp;ドロップ削除<br>
+      ・API連携・エラー処理
+    </td>
   </tr>
   <tr>
-    <td valign="top">
-      <ul>
-        <li>月間カレンダー画面<br>(CSS Grid自作・年月ピッカー)</li>
-        <li>日記の作成・詳細モーダル</li>
-        <li>ゴミ箱パネルと<br>ドラッグ&amp;ドロップ削除</li>
-        <li>API連携・エラー処理</li>
-      </ul>
-    </td>
-    <td valign="top">
-      <ul>
-        <li>日記CRUD API<br>(作成・取得・更新・ゴミ箱・復元)</li>
-        <li>カレンダーAPI<br>(月別のステッカー取得)</li>
-        <li>30日後の自動削除バッチ<br>未使用画像の自動清掃</li>
-        <li>AI再分析の連携(本文更新時)</li>
-        <li>人物認識(Curator)との<br>同期イベント連携</li>
-      </ul>
+    <td><b>⚙️ バックエンド</b></td>
+    <td>
+      ・日記CRUD API(作成・取得・更新・ゴミ箱・復元)<br>
+      ・カレンダーAPI(月別のステッカー取得)<br>
+      ・30日後の自動削除バッチ、未使用画像の自動清掃<br>
+      ・AI再分析の連携(本文更新時)<br>
+      ・人物認識(Curator)との同期イベント連携
     </td>
   </tr>
 </table>
@@ -53,7 +49,7 @@
 
 <table>
   <tr>
-    <td width="230"><b>🛡️ 中途半端な日記を<br>　　残さない</b></td>
+    <td width="250"><b>🛡️ 中途半端を残さない</b></td>
     <td>日記・ステッカー・人物認識を<br>1つのトランザクションで保存し、<br>失敗したらDB変更を全て取り消す</td>
   </tr>
   <tr>
@@ -61,7 +57,7 @@
     <td>1日1件・新規作成は1日5回まで<br>消してもゴミ箱から戻せる<br>戻す日に日記があれば確認して入れ替え</td>
   </tr>
   <tr>
-    <td><b>⏱️ 待ち時間で<br>　　DBを占有しない</b></td>
+    <td><b>⏱️ DBを占有しない</b></td>
     <td>AIの呼び出しはトランザクションの外で行い、<br>結果を検証してから<br>短いトランザクションで保存する</td>
   </tr>
 </table>
@@ -191,7 +187,7 @@ sequenceDiagram
 | GET | /api/diaries/trash | ゴミ箱の一覧 |
 | GET | /api/diaries/can-create | 作成可否の確認 |
 | POST | /api/diaries/generate-sticker | ステッカー生成 |
-| DELETE | /api/diaries/{id}/permanent | 完全削除(画面からは使わない) |
+| DELETE | /api/diaries/{id}/permanent | 完全削除(画面なし) |
 | GET | /api/calendar | 月別のステッカー取得 |
 
 ## 課題と対応
