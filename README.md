@@ -136,45 +136,21 @@ sequenceDiagram
 
 ### ① @Transactionalが効かない
 
-```mermaid
-flowchart LR
-  A["<b>問題</b><br/>本文更新で<br/>AI再分析の待ち時間も<br/>DB接続を占有する恐れ"] --> B["<b>原因</b><br/>同じクラス内の呼び出しは<br/>@Transactionalが効かない<br/>(プロキシを通らない)"]
-  B --> C["<b>対応</b><br/>DB更新を別クラスに分け<br/>(DiaryContentUpdater)<br/>AI呼び出しは外へ"]
-  C --> D["<b>結果</b><br/>AI待ちでDBを占有せず<br/>人物認識が失敗したら<br/>更新も取り消される"]
-
-  classDef step fill:#F4F4F5,stroke:#A1A1AA,color:#3F312E;
-  classDef result fill:#FFEDD5,stroke:#F97316,stroke-width:2px,color:#3F312E;
-  class A,B,C step;
-  class D result;
-```
+| 問題 ▶ | 原因 ▶ | 対応 ▶ | 結果 ✅ |
+|:---:|:---:|:---:|:---:|
+| 本文更新で<br>AI再分析の待ち時間も<br>DB接続を占有する恐れ | 同じクラス内の呼び出しは<br>`@Transactional` が効かない<br>(プロキシを通らない) | DB更新を別クラスに分け<br>(`DiaryContentUpdater`)<br>AI呼び出しは外へ | AI待ちでDBを占有せず<br>人物認識が失敗したら<br>更新も取り消される |
 
 ### ② 復元の同時操作(排他制御)
 
-```mermaid
-flowchart LR
-  A["<b>問題</b><br/>「確認→復元」の間に<br/>別の操作が入ると<br/>制約違反エラーの恐れ"] --> B["<b>原因</b><br/>確認と復元の間に<br/>別の処理が入る余地が<br/>あった(レビューで発見)"]
-  B --> C["<b>対応</b><br/>復元する日記と<br/>同じ日の既存の日記に<br/>悲観ロック(FOR UPDATE)"]
-  C --> D["<b>結果</b><br/>同時に操作しても<br/>エラーにならず<br/>日記は1件のまま"]
-
-  classDef step fill:#F4F4F5,stroke:#A1A1AA,color:#3F312E;
-  classDef result fill:#FFEDD5,stroke:#F97316,stroke-width:2px,color:#3F312E;
-  class A,B,C step;
-  class D result;
-```
+| 問題 ▶ | 原因 ▶ | 対応 ▶ | 結果 ✅ |
+|:---:|:---:|:---:|:---:|
+| 「確認→復元」の間に<br>別の操作が入ると<br>制約違反エラーの恐れ | 確認と復元の間に<br>別の処理が入る余地が<br>あった(レビューで発見) | 復元する日記と<br>同じ日の既存の日記に<br>悲観ロック(FOR UPDATE) | 同時に操作しても<br>エラーにならず<br>日記は1件のまま |
 
 ### ③ ログイン直後にカレンダーが更新されない(フロントエンド)
 
-```mermaid
-flowchart LR
-  A["<b>問題</b><br/>ログイン直後も<br/>再読み込みするまで<br/>カレンダーが変わらない"] --> B["<b>原因</b><br/>トークンの変化が<br/>画面に伝わらず<br/>データが再取得されない"]
-  B --> C["<b>対応</b><br/>トークンを購読可能にし<br/>(useAccessToken)<br/>ログイン時に再取得"]
-  C --> D["<b>結果</b><br/>再読み込みなしで<br/>カレンダーが<br/>すぐ切り替わる"]
-
-  classDef step fill:#F4F4F5,stroke:#A1A1AA,color:#3F312E;
-  classDef result fill:#FFEDD5,stroke:#F97316,stroke-width:2px,color:#3F312E;
-  class A,B,C step;
-  class D result;
-```
+| 問題 ▶ | 原因 ▶ | 対応 ▶ | 結果 ✅ |
+|:---:|:---:|:---:|:---:|
+| ログイン直後も<br>再読み込みするまで<br>カレンダーが変わらない | トークンの変化が<br>画面に伝わらず<br>データが再取得されない | トークンを購読可能にし<br>(`useAccessToken`)<br>ログイン時に再取得 | 再読み込みなしで<br>カレンダーが<br>すぐ切り替わる |
 
 ## テスト
 
