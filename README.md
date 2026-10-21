@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/idlms9/tada-frontend/main/tada-logo.png" alt="TADA" width="260" />
+  <img src="https://raw.githubusercontent.com/idlms9/tada-frontend/main/public/images/tada-logo.png" alt="TADA" width="260" />
 </p>
 
 <h3 align="center">AI絵日記サービス</h3>
