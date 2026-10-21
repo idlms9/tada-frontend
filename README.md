@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/idlms9/tada-frontend/main/public/images/tada-logo.png" alt="TADA" width="260" />
+  <img src="https://raw.githubusercontent.com/idlms9/tada-frontend/main/tada-logo.png" alt="TADA" width="260" />
 </p>
 
 <h3 align="center">AI絵日記サービス</h3>
@@ -24,6 +24,12 @@
   <a href="https://github.com/idlms9/tada-frontend"><b>Frontend</b></a> ・
   <a href="https://github.com/idlms9/tada-was"><b>Backend</b></a>
 </p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/idlms9/tada-frontend/main/main-screen.png" alt="メイン画面" width="720" />
+</p>
+
+<p align="center">メイン画面(日付ごとにステッカーが貯まる月間カレンダー)</p>
 
 ## 私の担当
 
