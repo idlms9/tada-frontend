@@ -83,24 +83,23 @@ flowchart LR
   N8N --> C["Cloudflare<br/>Workers AI"]
 
   classDef mine fill:#FFEDD5,stroke:#F97316,stroke-width:2px,color:#3F312E;
+  classDef team fill:#F4F4F5,stroke:#A1A1AA,color:#3F312E;
   class FE,BE mine;
+  class U,N8N,DB,ST,V,G,C team;
 ```
 
 <table>
   <tr>
-    <td width="230"><b>🟠 オレンジの枠</b></td>
-    <td>私の担当範囲(画面、日記・カレンダーAPI)</td>
+    <td width="150"><b>🟠 オレンジ</b></td>
+    <td>私の担当(画面、日記・カレンダーAPI)</td>
   </tr>
   <tr>
-    <td><b>Gemini</b></td>
-    <td>タイトル・キーワード・人物の抽出</td>
-  </tr>
-  <tr>
-    <td><b>Cloudflare Workers AI</b></td>
-    <td>ステッカー画像の生成</td>
+    <td><b>⚪ グレー</b></td>
+    <td>チームの他のメンバーの担当<br>(AI処理・DB・インフラなど)</td>
   </tr>
 </table>
 
+私が実装したのは、バックエンドからn8nを呼び出す連携部分です(本文更新時のAI再分析)。
 画面は1つのページに、モーダルやパネルを重ねる構成です(ページ遷移なし)。
 
 ### 日記を更新するときの流れ
