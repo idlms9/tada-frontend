@@ -1,23 +1,31 @@
-[日本語](README.md) | [한국어](README.ko.md)
+<h1 align="center">📔 TADA ｜ AI絵日記サービス</h1>
 
-# TADA — AI絵日記サービス
+<p align="center"><b>日記を書くと、AIが一日を1枚のステッカーにして残してくれる</b></p>
 
-![Java](https://img.shields.io/badge/Java_17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot_3.5-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
-![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
-![TanStack Query](https://img.shields.io/badge/TanStack_Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white)
-![JUnit](https://img.shields.io/badge/JUnit_5-25A162?style=for-the-badge&logo=junit5&logoColor=white)
+<p align="center">カレンダー・日記 担当 ｜ チーム開発(5名・約2ヶ月)</p>
 
-> 日記を書くと、AIが一日を1枚のステッカーにしてカレンダーに残してくれるサービスです。
+<p align="center">
+  <img src="https://img.shields.io/badge/JAVA_17-007396?style=for-the-badge&logo=openjdk&logoColor=white" />
+  <img src="https://img.shields.io/badge/SPRING_BOOT_3.5-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" />
+  <img src="https://img.shields.io/badge/SPRING_DATA_JPA-59666C?style=for-the-badge&logo=spring&logoColor=white" />
+  <img src="https://img.shields.io/badge/JUNIT_5-25A162?style=for-the-badge&logo=junit5&logoColor=white" />
+  <img src="https://img.shields.io/badge/NEXT.JS-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" />
+  <img src="https://img.shields.io/badge/TYPESCRIPT-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
+  <img src="https://img.shields.io/badge/TAILWIND_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" />
+  <img src="https://img.shields.io/badge/TANSTACK_QUERY-FF4154?style=for-the-badge&logo=reactquery&logoColor=white" />
+</p>
 
-チーム開発(5名・約2ヶ月)のうち、私が担当した部分を紹介します。
+<p align="center">
+  <a href="https://tada-frontend-seven.vercel.app/"><b>▶ Demo</b></a> ・
+  <a href="https://github.com/idlms9/tada-frontend"><b>Frontend</b></a> ・
+  <a href="https://github.com/idlms9/tada-was"><b>Backend</b></a> ・
+  <a href="README.ko.md"><b>한국어</b></a>
+</p>
 
-- フロントエンド:[idlms9/tada-frontend](https://github.com/idlms9/tada-frontend)
-- バックエンド:[idlms9/tada-was](https://github.com/idlms9/tada-was)
-- 元リポジトリ:[OhSSangHoon/tada-frontend](https://github.com/OhSSangHoon/tada-frontend)、[OhSSangHoon/tada-was](https://github.com/OhSSangHoon/tada-was)
+<p align="center">元リポジトリ:
+  <a href="https://github.com/OhSSangHoon/tada-frontend">tada-frontend</a>、
+  <a href="https://github.com/OhSSangHoon/tada-was">tada-was</a>
+</p>
 
 ## 担当
 
@@ -155,13 +163,7 @@ sequenceDiagram
 - StickerObjectCleanupClient(ストレージ連携):5件
 - DiaryAnalysisClient(n8n連携):3件
 
-実行:`./gradlew test`
-
-## 技術(私が使ったもの)
-
-- **バックエンド**:Java 17、Spring Boot 3.5、Spring Data JPA、PostgreSQL
-- **フロントエンド**:Next.js、TypeScript、TanStack Query、Tailwind CSS
-- **テスト**:JUnit、Mockito
+JUnit・Mockitoで作成。実行:`./gradlew test`
 
 ## ディレクトリ構成
 
