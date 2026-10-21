@@ -18,29 +18,41 @@
 <p align="center">
   <a href="https://tada-frontend-seven.vercel.app/"><b>▶ Demo</b></a> ・
   <a href="https://github.com/idlms9/tada-frontend"><b>Frontend</b></a> ・
-  <a href="https://github.com/idlms9/tada-was"><b>Backend</b></a> ・
-  <a href="README.ko.md"><b>한국어</b></a>
+  <a href="https://github.com/idlms9/tada-was"><b>Backend</b></a>
 </p>
 
-## 担当
+## 私の担当
 
-**フロントエンド**
-- 月間カレンダー画面(CSS Gridで自作、年月ホイールピッカー)
-- 日記の作成・詳細モーダル
-- ゴミ箱パネルとドラッグ&ドロップ削除
-- API連携・エラー処理
-
-**バックエンド**
-- 日記CRUD API(作成・取得・更新・ゴミ箱・復元)
-- カレンダーAPI(月別のステッカー取得)
-- ゴミ箱の30日後自動削除バッチ、未使用ステッカー画像の自動清掃バッチ
-- 本文更新時のAI再分析の連携、人物認識(Curator)との同期イベント連携
+<table>
+  <tr>
+    <th width="50%">🖥️ フロントエンド</th>
+    <th width="50%">⚙️ バックエンド</th>
+  </tr>
+  <tr>
+    <td valign="top">
+      <ul>
+        <li>月間カレンダー画面<br>(CSS Gridで自作・年月ホイールピッカー)</li>
+        <li>日記の作成・詳細モーダル</li>
+        <li>ゴミ箱パネルとドラッグ&amp;ドロップ削除</li>
+        <li>API連携・エラー処理</li>
+      </ul>
+    </td>
+    <td valign="top">
+      <ul>
+        <li>日記CRUD API<br>(作成・取得・更新・ゴミ箱・復元)</li>
+        <li>カレンダーAPI(月別のステッカー取得)</li>
+        <li>30日後の自動削除バッチ<br>未使用ステッカー画像の自動清掃</li>
+        <li>本文更新時のAI再分析の連携<br>人物認識(Curator)との同期イベント連携</li>
+      </ul>
+    </td>
+  </tr>
+</table>
 
 ## 設計で考えたこと
 
-- **中途半端な日記を残さない**:日記・ステッカー・人物認識を1つのトランザクションで保存し、失敗したらDB変更を全て取り消します。
-- **安心して使えるように**:1日1件・新規作成は1日5回まで。消してもゴミ箱から戻せます。戻す日に日記がある場合は、確認してから入れ替えます。
-- **待ち時間でDBを占有しない**:AIの呼び出しはトランザクションの外で行い、結果を検証してから短いトランザクションで保存します。
+| 🛡️ 中途半端な日記を残さない | 🔄 安心して使える | ⏱️ 待ち時間でDBを占有しない |
+|:---:|:---:|:---:|
+| 日記・ステッカー・人物認識を<br>1つのトランザクションで保存<br>失敗したらDB変更を全て取り消す | 1日1件・新規は1日5回まで<br>消してもゴミ箱から戻せる<br>戻す日に日記があれば確認して入れ替え | AIの呼び出しは<br>トランザクションの外で実行<br>検証後に短いトランザクションで保存 |
 
 ## アーキテクチャ
 
@@ -48,33 +60,36 @@
 
 ```mermaid
 flowchart LR
-  U["ユーザー"] --> FE["フロントエンド<br/>Next.js (Vercel)"]
-  FE -->|"REST API / JWT"| BE["バックエンド<br/>Spring Boot (Railway)"]
-  FE -->|"日記の1次分析<br/>(サーバールート)"| N8N["n8n (Railway)"]
-  BE -->|"ステッカー生成<br/>本文更新時の再分析"| N8N
+  U["User"] --> FE["Frontend<br/>Next.js / Vercel"]
+  FE -->|"REST API"| BE["Backend<br/>Spring Boot / Railway"]
+  FE -->|"analysis"| N8N["n8n"]
+  BE -->|"sticker / re-analysis"| N8N
   BE --> DB[("Supabase<br/>PostgreSQL + pgvector")]
-  BE --> ST[("Supabase Storage<br/>ステッカー画像")]
-  BE -->|"検索用 embedding"| V["Voyage AI"]
-  N8N --> G["Gemini<br/>タイトル・キーワード・人物抽出"]
-  N8N --> C["Cloudflare Workers AI<br/>ステッカー画像生成"]
+  BE --> ST[("Supabase<br/>Storage")]
+  BE -->|"embedding"| V["Voyage AI"]
+  N8N --> G["Gemini"]
+  N8N --> C["Cloudflare<br/>Workers AI"]
 
-  classDef mine fill:#FFEDD5,stroke:#F97316,stroke-width:2px;
+  classDef mine fill:#FFEDD5,stroke:#F97316,stroke-width:2px,color:#3F312E;
   class FE,BE mine;
 ```
 
-オレンジの枠が私の担当範囲です(カレンダー・日記の画面、日記・カレンダーAPI)。
+| 🟠 オレンジの枠 | n8n → Gemini | n8n → Cloudflare Workers AI |
+|:---:|:---:|:---:|
+| 私の担当範囲<br>(画面・日記/カレンダーAPI) | タイトル・キーワード<br>人物の抽出 | ステッカー画像の生成 |
+
 画面は1つのページに、モーダルやパネルを重ねる構成です(ページ遷移なし)。
 
 ### 日記を更新するときの流れ
 
 ```mermaid
 sequenceDiagram
-  participant FE as フロントエンド
-  participant S as DiaryService.updateDiary<br/>(トランザクション外)
-  participant N as n8n(AI再分析)
-  participant U as DiaryContentUpdater.apply<br/>(@Transactional)
-  participant C as 人物認識(Curator)
-  participant E as 検索用データ更新
+  participant FE as Frontend
+  participant S as DiaryService<br/>(no transaction)
+  participant N as n8n
+  participant U as DiaryContentUpdater<br/>(@Transactional)
+  participant C as Curator
+  participant E as Search index
 
   FE->>S: PUT /api/diaries/{id}
   S->>N: 本文が変わった場合のみ再分析
@@ -87,19 +102,25 @@ sequenceDiagram
   U-)E: コミット後に非同期で実行
 ```
 
-- **AI呼び出しはトランザクションの外**:待ち時間にDB接続を占有しません。
-- **DB更新は別クラスに分離**:同じクラス内の呼び出しでは `@Transactional` が効かない(プロキシを通らない)ためです。
-- **人物認識は同じトランザクション**:失敗したら日記の更新も取り消されます(対象はDB変更のみで、外部の画像などは含みません)。
-- **検索用データの更新はコミット後**:失敗しても日記の保存には影響しません。
+<table>
+  <tr>
+    <td width="50%"><b>⏱️ AI呼び出しはトランザクションの外</b><br>待ち時間にDB接続を占有しない</td>
+    <td width="50%"><b>🧩 DB更新は別クラスに分離</b><br>同じクラス内の呼び出しでは<br><code>@Transactional</code> が効かない<br>(プロキシを通らない)ため</td>
+  </tr>
+  <tr>
+    <td><b>🔗 人物認識は同じトランザクション</b><br>失敗したら日記の更新も取り消される<br>(対象はDB変更のみ)</td>
+    <td><b>✅ 検索用データの更新はコミット後</b><br>失敗しても日記の保存には影響しない</td>
+  </tr>
+</table>
 
 ### ゴミ箱から復元するときの流れ
 
 ```mermaid
 sequenceDiagram
-  participant FE as フロントエンド
-  participant D as DiaryService.restoreDiary<br/>(@Transactional)
+  participant FE as Frontend
+  participant D as DiaryService<br/>(@Transactional)
   participant DB as PostgreSQL
-  participant C as 人物認識(Curator)
+  participant C as Curator
 
   FE->>D: POST /api/diaries/{id}/restore
   D->>DB: 復元対象を悲観ロック(FOR UPDATE)
@@ -113,9 +134,9 @@ sequenceDiagram
   end
 ```
 
-- **二重の防御**:DB制約(同じ日のACTIVEは1件)とロックを併用し、同時に操作しても制約違反エラーにならず1件のままです。
-- **入れ替えは1トランザクション**:既存をゴミ箱へ送る処理と復元を同時に行い、途中で失敗しても中途半端な状態を残しません。
-- **完全削除**:利用者の操作では行わず、30日経過後に自動削除バッチが実行します。
+| 🔒 二重の防御 | 🔁 入れ替えは1トランザクション | 🗑️ 完全削除は自動のみ |
+|:---:|:---:|:---:|
+| DB制約(同じ日のACTIVEは1件)<br>とロックを併用<br>同時に操作しても1件のまま | 既存をゴミ箱へ送る処理と<br>復元を同時に実行<br>途中で失敗しても中途半端にならない | 利用者の操作では行わず<br>30日経過後に<br>自動削除バッチが実行 |
 
 ## 担当API
 
@@ -154,11 +175,13 @@ sequenceDiagram
 
 ## テスト
 
-- DiaryService(作成・更新・ゴミ箱・復元):18件
-- DiaryContentUpdater(本文更新・イベント発行):5件
-- StickerCleanupService(未使用画像の清掃):5件
-- StickerObjectCleanupClient(ストレージ連携):5件
-- DiaryAnalysisClient(n8n連携):3件
+| 対象 | 検証内容 | 件数 |
+|---|---|---:|
+| DiaryService | 作成・更新・ゴミ箱・復元 | 18 |
+| DiaryContentUpdater | 本文更新・イベント発行 | 5 |
+| StickerCleanupService | 未使用画像の清掃 | 5 |
+| StickerObjectCleanupClient | ストレージ連携 | 5 |
+| DiaryAnalysisClient | n8n連携 | 3 |
 
 JUnit・Mockitoで作成。実行:`./gradlew test`
 
