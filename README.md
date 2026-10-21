@@ -22,11 +22,6 @@
   <a href="README.ko.md"><b>한국어</b></a>
 </p>
 
-<p align="center">元リポジトリ:
-  <a href="https://github.com/OhSSangHoon/tada-frontend">tada-frontend</a>、
-  <a href="https://github.com/OhSSangHoon/tada-was">tada-was</a>
-</p>
-
 ## 担当
 
 **フロントエンド**
