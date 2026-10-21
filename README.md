@@ -75,13 +75,14 @@ flowchart LR
   BE --> DB[("Supabase<br/>PostgreSQL + pgvector")]
   BE --> ST[("Supabase<br/>Storage")]
   BE -->|"embedding"| V["Voyage AI"]
+  BE -->|"event"| CU["Curator"]
   N8N --> G["Gemini"]
   N8N --> C["Cloudflare<br/>Workers AI"]
 
   classDef mine fill:#FFEDD5,stroke:#F97316,stroke-width:2px,color:#3F312E;
   classDef team fill:#F4F4F5,stroke:#A1A1AA,color:#3F312E;
   class FE,BE mine;
-  class U,N8N,DB,ST,V,G,C team;
+  class U,N8N,DB,ST,V,G,C,CU team;
 ```
 
 <table>
@@ -91,11 +92,11 @@ flowchart LR
   </tr>
   <tr>
     <td><b>⚪ グレー</b></td>
-    <td>チームの他のメンバーの担当<br>(AI処理・DB・インフラなど)</td>
+    <td>チームの他のメンバーの担当<br>(AI処理・DB・インフラ・人物認識など)</td>
   </tr>
 </table>
 
-私が実装したのは、バックエンドからn8nを呼び出す連携部分です(本文更新時のAI再分析)。
+私が実装したのは、バックエンドからn8nを呼び出す連携部分と、人物認識へイベントを渡す部分です。
 画面は1つのページに、モーダルやパネルを重ねる構成です(ページ遷移なし)。
 
 ### 日記を更新するときの流れ
@@ -122,15 +123,7 @@ sequenceDiagram
 
 <table>
   <tr>
-    <td width="150"><b>⏱️ AI呼び出し</b></td>
-    <td>トランザクションの外で実行<br>待ち時間にDB接続を占有しない</td>
-  </tr>
-  <tr>
-    <td><b>🧩 DB更新</b></td>
-    <td>別クラスに分離<br>同じクラス内の呼び出しでは<br><code>@Transactional</code> が効かないため(プロキシを通らない)</td>
-  </tr>
-  <tr>
-    <td><b>🔗 人物認識</b></td>
+    <td width="150"><b>🔗 人物認識</b></td>
     <td>同じトランザクションで実行<br>失敗したら日記の更新も取り消される<br>(対象はDB変更のみ)</td>
   </tr>
   <tr>
@@ -162,11 +155,7 @@ sequenceDiagram
 
 <table>
   <tr>
-    <td width="150"><b>🔒 二重の防御</b></td>
-    <td>DB制約とロックを併用<br>(同じ日のACTIVEは1件)<br>同時に操作しても1件のまま</td>
-  </tr>
-  <tr>
-    <td><b>🔁 入れ替え</b></td>
+    <td width="150"><b>🔁 入れ替え</b></td>
     <td>既存をゴミ箱へ送る処理と復元を<br>1つのトランザクションで実行<br>途中で失敗しても中途半端にならない</td>
   </tr>
   <tr>
@@ -230,7 +219,7 @@ sequenceDiagram
   </tr>
   <tr>
     <td><b>🟢 結果</b></td>
-    <td>同時に操作しても、エラーにならず<br>日記は1件のまま</td>
+    <td>同時に操作しても、エラーにならず<br>日記は1件のまま(DB制約とロックの二重で防御)</td>
   </tr>
 </table>
 
